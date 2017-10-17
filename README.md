@@ -5,7 +5,7 @@
 ## Documentation : Position Service
 Run
 ```sh
-docker run -d --name FollowMeServicePositionDoc -p 8081:8080 -e SWAGGER_JSON=/foo/swagger.json -v $(pwd)/PositionService:/foo swaggerapi/swagger-ui && open http://localhost:8081
+docker run -d --name FollowMeServicePositionDoc -p 8081:8080 -e SWAGGER_JSON=/foo/swagger.json -v $(pwd)/PositionService/api:/foo swaggerapi/swagger-ui && open http://localhost:8081
 ```
 
 Stop

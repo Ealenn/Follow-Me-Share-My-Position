@@ -1,0 +1,80 @@
+---
+swagger: "2.0"
+info:
+  description: "API Follow Me - Project IOT CCM"
+  version: "1.0.0"
+  title: "Follow Me"
+host: "api.follow-me.fr"
+basePath: "/v1"
+tags:
+- name: "Position"
+  description: "Everything about position"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /pos/{ean}:
+    get:
+      tags:
+      - "Position"
+      summary: "Return the last position of EAN"
+      operationId: "posEanGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ean"
+        in: "path"
+        description: "Unique ean of object"
+        required: true
+        type: "string"
+        minimum: 1
+      responses:
+        200:
+          description: "Return array of position [$Position]"
+          schema:
+            $ref: "#/definitions/Position"
+        400:
+          description: "The specified ean is invalid"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "Position"
+  /pos:
+    post:
+      tags:
+      - "Position"
+      summary: "Send position for EAN"
+      operationId: "posPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Position"
+        description: "The new position of object (EAN)"
+        required: false
+        schema:
+          $ref: "#/definitions/Position"
+      responses:
+        200:
+          description: "Return new position"
+          schema:
+            $ref: "#/definitions/Position"
+        default:
+          description: "Unexpected error"
+      x-swagger-router-controller: "Position"
+definitions:
+  Position:
+    properties:
+      ean:
+        type: "string"
+      lat:
+        type: "string"
+      lon:
+        type: "string"
+      acc:
+        type: "string"
+      datetime:
+        type: "string"
+        format: "date-time"
