@@ -1,0 +1,116 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Follow Me",
+    "description": "API Follow Me - Project IOT CCM",
+    "version": "1.0.0"
+  },
+  "host": "api.follow-me.fr",
+  "basePath": "/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Position",
+      "description": "Everything about position"
+    }
+  ],
+  "definitions": {
+    "Position": {
+      "properties": {
+        "ean": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "string"
+        },
+        "lon": {
+          "type": "string"
+        },
+        "acc": {
+          "type": "string"
+        },
+        "datetime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/pos/{ean}": {
+      "get": {
+        "tags": [
+          "Position"
+        ],
+        "summary": "Return the last position of EAN",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ean",
+            "required": true,
+            "type": "string",
+            "minimum": 1,
+            "description": "Unique ean of object"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Return array of position [$Position]",
+            "schema": {
+              "$ref": "#/definitions/Position"
+            }
+          },
+          "400": {
+            "description": "The specified ean is invalid"
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/pos": {
+      "post": {
+        "tags": [
+          "Position"
+        ],
+        "summary": "Send position for EAN",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Position",
+            "description": "The new position of object (EAN)",
+            "schema": {
+              "$ref": "#/definitions/Position"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Return new position",
+            "schema": {
+              "$ref": "#/definitions/Position"
+            }
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    }
+  }
+}
