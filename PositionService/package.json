@@ -17,6 +17,7 @@
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
     "mongodb": "^2.2.33",
+    "socket.io-client": "^2.0.3",
     "swagger-tools": "0.10.1"
   }
 }

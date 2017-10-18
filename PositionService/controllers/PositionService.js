@@ -1,7 +1,11 @@
 'use strict';
 
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
-var url = require('../mongodb.js').mongodb.url
+var url = require('../config.js').mongodb.url
+
+var socketUrl = require('../config.js').socket.url
+var io = require('socket.io-client');
+var socket = io.connect(socketUrl, {reconnect: true});
 
 var findDocuments = function(db, ean, callback) {
   // Get the documents collection
@@ -69,6 +73,7 @@ exports.posPOST = function(args, res, next) {
      insertDocument(db, newPosition, function (docs) {
        if(docs.result.ok){
          res.setHeader('Content-Type', 'application/json');
+         socket.emit('newPosition', newPosition);
          res.end(JSON.stringify(newPosition));
        } else {
          res.end();
