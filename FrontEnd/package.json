@@ -11,9 +11,17 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "axios": "^0.17.0",
+    "fs": "0.0.1-security",
+    "moment": "^2.19.1",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
     "vue": "^2.5.2",
+    "vue-google-maps": "^0.1.21",
     "vue-materials": "^1.0.7-rc.7",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-socket.io": "^2.1.1-a",
+    "vue2-google-maps": "^0.8.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
