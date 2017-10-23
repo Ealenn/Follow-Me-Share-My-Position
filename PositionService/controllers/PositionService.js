@@ -2,6 +2,10 @@
 
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
 var url = require('../config.js').mongodb.url
+var mongoOptions = {
+  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+  replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+};
 
 var socketUrl = require('../config.js').socket.url
 var io = require('socket.io-client');
@@ -27,6 +31,16 @@ var insertDocument = function(db, newPosition, callback) {
   });
 }
 
+var deleteOldDocument = function(db, ean, callback) {
+    // Get the documents collection
+    var collection = db.collection('position');
+    // Insert some documents
+    collection.remove({ ean : ean }, function(err, result) {
+      assert.equal(err, null);
+      callback(err, result);
+    });
+}
+
 /* ------------------------------ */
 
 exports.posEanGET = function(args, res, next) {
@@ -36,19 +50,23 @@ exports.posEanGET = function(args, res, next) {
    * ean String Unique ean of object
    * returns Position
    **/
-   MongoClient.connect(url, function(err, db) {
+   MongoClient.connect(url, mongoOptions, function(err, db) {
      assert.equal(null, err);
 
      if(err) {
+       console.log(err)
        res.end();
      }
 
      var ean = args.ean.value || 0;
+     var collection = db.collection('position');
 
-     findDocuments(db, ean, function (docs) {
-       res.setHeader('Content-Type', 'application/json');
-       res.end(JSON.stringify(docs));
-     });
+     collection.find({ean: ean}).toArray(function(err, docs) {
+      console.log('view', err)
+      assert.equal(err, null);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(docs));
+    });
 
      db.close();
    });
@@ -61,7 +79,7 @@ exports.posPOST = function(args, res, next) {
    * position Position The new position of object (EAN) (optional)
    * returns Position
    **/
-   MongoClient.connect(url, function(err, db) {
+   MongoClient.connect(url, mongoOptions, function(err, db) {
      assert.equal(null, err);
 
      if(err) {
@@ -70,6 +88,9 @@ exports.posPOST = function(args, res, next) {
 
      var newPosition = args.Position.value || {};
 
+     deleteOldDocument(db, newPosition.ean, function (e) {
+       console.log('delete:', e)
+     })
      insertDocument(db, newPosition, function (docs) {
        if(docs.result.ok){
          res.setHeader('Content-Type', 'application/json');
